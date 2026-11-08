@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KitapDünyası - CSS ve Liste Ödevi</title>
+<style>
+*{box-sizing:border-box}
+ul{margin:0;padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+body{margin:0;background:#f4efe6;color:#2a2118;font:14px/1.5 Arial,Helvetica,sans-serif}
+.logo{padding:14px 24px;font:bold 26px Georgia,serif;color:#7a1f1f}
+
+/* ===== 1) ÜST AÇILIR MENÜ (yatay, iç içe liste) ===== */
+#ustmenu{background:#2b2b2b;padding:0 24px}
+#ustmenu > ul > li{display:inline-block;position:relative}
+#ustmenu a{display:block;padding:12px 18px;color:#eee;font-weight:bold}
+#ustmenu li:hover > a{background:#7a1f1f;color:#fff}
+#ustmenu ul ul{display:none;position:absolute;top:100%;left:0;width:190px;background:#3a3a3a;z-index:30}
+#ustmenu ul ul li{position:relative}
+#ustmenu ul ul a{font-weight:normal;padding:10px 16px}
+#ustmenu li:hover > ul{display:block}
+#ustmenu ul ul ul{top:0;left:100%}
+
+.sayfa{display:flex;gap:16px;padding:20px 24px 40px;align-items:flex-start}
+.sag{flex:1;min-width:0;display:flex;flex-direction:column;gap:16px}
+
+/* ===== 2) YAN MENÜ (mouse gelince alt menü yandan açılır) ===== */
+.yan{width:210px;flex:none;background:#fff;border:1px solid #d8cfbf}
+.yan li{position:relative}
+.yan li > a{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #eee;font-weight:bold;font-size:13px}
+.yan li:hover > a{background:#7a1f1f;color:#fff}
+.yan li.alt > a::after{content:"\203A";font-size:16px}
+.yan ul ul{display:none;position:absolute;top:-1px;left:100%;width:200px;background:#fff;border:1px solid #d8cfbf;z-index:20}
+.yan li:hover > ul{display:block}
+.yan ul ul a{font-weight:normal}
+
+/* ===== 3) ÜST RESİM UYGULAMASI (küçük kitaba gelince büyük resim değişir) ===== */
+.galeri{position:relative;height:300px;background:#fff;border:1px solid #d8cfbf}
+.buyuk{position:absolute;inset:0 0 72px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;opacity:0;z-index:1}
+.buyuk span{font-size:70px;line-height:1.1}
+.buyuk b{font:bold 26px Georgia,serif}
+.galeri li:first-child .buyuk{opacity:1}
+.galeri ul:hover li:first-child .buyuk{opacity:0}
+.galeri li:hover .buyuk,.galeri li:first-child:hover .buyuk{opacity:1;z-index:2}
+.kucuk{position:absolute;bottom:10px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;font-size:28px;background:#f4efe6;border:2px solid #d8cfbf;z-index:3}
+.galeri li:hover .kucuk{border-color:#7a1f1f}
+.galeri li:nth-child(1) .kucuk{left:14px}.galeri li:nth-child(2) .kucuk{left:76px}
+.galeri li:nth-child(3) .kucuk{left:138px}.galeri li:nth-child(4) .kucuk{left:200px}
+.galeri li:nth-child(5) .kucuk{left:262px}.galeri li:nth-child(6) .kucuk{left:324px}
+.galeri li:nth-child(1) .buyuk{background:linear-gradient(135deg,#7a1f1f,#c0562b)}
+.galeri li:nth-child(2) .buyuk{background:linear-gradient(135deg,#1f4e79,#4a90c2)}
+.galeri li:nth-child(3) .buyuk{background:linear-gradient(135deg,#2d6a4f,#74b98f)}
+.galeri li:nth-child(4) .buyuk{background:linear-gradient(135deg,#5a189a,#9d4edd)}
+.galeri li:nth-child(5) .buyuk{background:linear-gradient(135deg,#b7791f,#e0b04a)}
+.galeri li:nth-child(6) .buyuk{background:linear-gradient(135deg,#333,#000)}
+
+/* ===== 4) YAPRAK UYGULAMASI (hover renklenir, tıklayınca yaprağa geçilir) ===== */
+.yaprak input{position:absolute;opacity:0;pointer-events:none}
+.basliklar{display:flex;flex-wrap:wrap;border-bottom:2px solid #7a1f1f}
+.yaprak label{display:block;padding:10px 16px;font-weight:bold;font-size:13px;background:#e8e0d0;margin-right:2px;cursor:pointer}
+.yaprak label:hover{background:#d9a679}
+.icerik{display:none;padding:18px;background:#fff;border:1px solid #d8cfbf;border-top:none}
+#y1:checked~.basliklar label[for=y1],#y2:checked~.basliklar label[for=y2],#y3:checked~.basliklar label[for=y3],
+#y4:checked~.basliklar label[for=y4],#y5:checked~.basliklar label[for=y5]{background:#7a1f1f;color:#fff}
+#y1:checked~.c1,#y2:checked~.c2,#y3:checked~.c3,#y4:checked~.c4,#y5:checked~.c5{display:block}
+.kitaplar{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.kitaplar li{border:1px solid #e5dccb;padding:12px;background:#faf7f1}
+.kitaplar i{display:block;color:#6b5e4b;font-size:12px}
+.kitaplar b{display:block;color:#c0562b;margin-top:4px}
+
+@media (max-width:760px){
+  .sayfa{flex-direction:column}.yan{width:100%}
+  .yan ul ul{position:static;width:100%;border:none}
+  #ustmenu ul ul{position:static;width:100%}
+  #ustmenu > ul > li{display:block}
+  .galeri li .kucuk{width:40px;height:40px;font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="logo">KitapDünyası</div>
+
+<!-- 1) ÜST AÇILIR MENÜ -->
+<nav id="ustmenu">
+  <ul>
+    <li><a href="#">Ana Sayfa</a></li>
+    <li><a href="#">Kitap</a>
+      <ul>
+        <li><a href="#">Roman</a></li>
+        <li><a href="#">Edebiyat</a>
+          <ul><li><a href="#">Şiir</a></li><li><a href="#">Deneme</a></li><li><a href="#">Hikaye</a></li></ul></li>
+        <li><a href="#">Çocuk Kitapları</a>
+          <ul><li><a href="#">0-6 Yaş</a></li><li><a href="#">7-12 Yaş</a></li></ul></li>
+        <li><a href="#">Ders ve Sınav</a></li>
+      </ul></li>
+    <li><a href="#">Müzik</a>
+      <ul><li><a href="#">CD</a></li><li><a href="#">Plak</a></li></ul></li>
+    <li><a href="#">Kırtasiye</a>
+      <ul><li><a href="#">Defter</a></li><li><a href="#">Kalem</a></li><li><a href="#">Ajanda</a></li></ul></li>
+    <li><a href="#">Hakkımızda</a></li>
+    <li><a href="#">İletişim</a></li>
+  </ul>
+</nav>
+
+<div class="sayfa">
+
+  <!-- 2) YAN MENÜ -->
+  <nav class="yan">
+    <ul>
+      <li class="alt"><a href="#">Roman</a>
+        <ul><li><a href="#">Türk Edebiyatı</a></li><li><a href="#">Dünya Edebiyatı</a></li><li><a href="#">Polisiye</a></li></ul></li>
+      <li class="alt"><a href="#">Şiir</a>
+        <ul><li><a href="#">Divan Şiiri</a></li><li><a href="#">Modern Şiir</a></li></ul></li>
+      <li class="alt"><a href="#">Felsefe</a>
+        <ul><li><a href="#">Antik Felsefe</a></li><li><a href="#">Çağdaş Felsefe</a></li></ul></li>
+      <li class="alt"><a href="#">Tarih</a>
+        <ul><li><a href="#">Osmanlı Tarihi</a></li><li><a href="#">Dünya Tarihi</a></li></ul></li>
+      <li class="alt"><a href="#">Çocuk Kitapları</a>
+        <ul><li><a href="#">Masallar</a></li><li><a href="#">Boyama Kitapları</a></li></ul></li>
+      <li class="alt"><a href="#">Bilim ve Teknoloji</a>
+        <ul><li><a href="#">Bilgisayar</a></li><li><a href="#">Matematik</a></li></ul></li>
+      <li class="alt"><a href="#">Ders ve Sınav</a>
+        <ul><li><a href="#">YKS</a></li><li><a href="#">KPSS</a></li></ul></li>
+      <li><a href="#">Dergiler</a></li>
+      <li><a href="#">Tüm Kategoriler</a></li>
+    </ul>
+  </nav>
+
+  <div class="sag">
+
+    <!-- 3) ÜST RESİM UYGULAMASI -->
+    <div class="galeri">
+      <ul>
+        <li><div class="buyuk"><span>📕</span><b>Suç ve Ceza</b>Dostoyevski</div><a class="kucuk" href="#">📕</a></li>
+        <li><div class="buyuk"><span>📘</span><b>Küçük Prens</b>Saint-Exupéry</div><a class="kucuk" href="#">📘</a></li>
+        <li><div class="buyuk"><span>📗</span><b>Simyacı</b>Paulo Coelho</div><a class="kucuk" href="#">📗</a></li>
+        <li><div class="buyuk"><span>📙</span><b>1984</b>George Orwell</div><a class="kucuk" href="#">📙</a></li>
+        <li><div class="buyuk"><span>📒</span><b>Kürk Mantolu Madonna</b>Sabahattin Ali</div><a class="kucuk" href="#">📒</a></li>
+        <li><div class="buyuk"><span>📓</span><b>Sefiller</b>Victor Hugo</div><a class="kucuk" href="#">📓</a></li>
+      </ul>
+    </div>
+
+    <!-- 4) YAPRAK UYGULAMASI -->
+    <div class="yaprak">
+      <input type="radio" name="y" id="y1" checked><input type="radio" name="y" id="y2">
+      <input type="radio" name="y" id="y3"><input type="radio" name="y" id="y4"><input type="radio" name="y" id="y5">
+      <ul class="basliklar">
+        <li><label for="y1">Çok Satanlar</label></li>
+        <li><label for="y2">Yeni Çıkanlar</label></li>
+        <li><label for="y3">Beğenilenler</label></li>
+        <li><label for="y4">İndirimdekiler</label></li>
+        <li><label for="y5">Ön Sipariş</label></li>
+      </ul>
+      <div class="icerik c1"><ul class="kitaplar">
+        <li>Suç ve Ceza<i>Dostoyevski</i><b>85,00 TL</b></li><li>1984<i>George Orwell</i><b>60,00 TL</b></li><li>Simyacı<i>Paulo Coelho</i><b>55,00 TL</b></li></ul></div>
+      <div class="icerik c2"><ul class="kitaplar">
+        <li>Yeni Roman<i>Yeni Yazar</i><b>95,00 TL</b></li><li>Deneme Kitabı<i>Yeni Yazar</i><b>70,00 TL</b></li><li>Şiir Seçkisi<i>Yeni Yazar</i><b>50,00 TL</b></li></ul></div>
+      <div class="icerik c3"><ul class="kitaplar">
+        <li>Küçük Prens<i>Saint-Exupéry</i><b>40,00 TL</b></li><li>Sefiller<i>Victor Hugo</i><b>110,00 TL</b></li><li>Kürk Mantolu Madonna<i>Sabahattin Ali</i><b>45,00 TL</b></li></ul></div>
+      <div class="icerik c4"><ul class="kitaplar">
+        <li>Tutunamayanlar<i>Oğuz Atay</i><b>99,00 TL</b></li><li>Martin Eden<i>Jack London</i><b>65,00 TL</b></li><li>Beyaz Diş<i>Jack London</i><b>35,00 TL</b></li></ul></div>
+      <div class="icerik c5"><ul class="kitaplar">
+        <li>Yakında Çıkacak 1<i>Yazar</i><b>80,00 TL</b></li><li>Yakında Çıkacak 2<i>Yazar</i><b>90,00 TL</b></li><li>Yakında Çıkacak 3<i>Yazar</i><b>75,00 TL</b></li></ul></div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
